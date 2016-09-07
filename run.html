@@ -1,0 +1,48 @@
+<html>
+    <script>
+        var log_url='http://127.0.0.1/';
+        
+        function create_http_request() {
+            var xhr;
+            try {xhr = new XMLHttpRequest();}
+            catch(e) {
+                var IEXHRVers =["Msxml3.XMLHTTP","Msxml2.XMLHTTP","Microsoft.XMLHTTP"];
+                for (var i=0,len=IEXHRVers.length;i< len;i++) {
+                    try {xhr = new ActiveXObject(IEXHRVers[i]);}
+                    catch(e) {continue;}
+                }
+            }
+            return xhr;
+        }
+        
+        function report_check_state(information) {
+            if (typeof log_url!='undefined') {
+                var xhr=create_http_request();
+                xhr.open('get',log_url+'log='+information,false);
+                xhr.send(null);
+            } else
+                console.log(execute_log);
+        }
+        
+        function print_in_window(information) {
+            var output=document.getElementById('output_state_window');
+            output.innerHTML+=information+'<br/>';
+        }
+        
+        window.onmessage=function(message) {
+            var resule=eval(message.data);
+            report_check_state(message.data);
+            print_in_window(resule.vuln_name+' check_state='+resule.check_state);
+//            console.log(resule.vuln_name+' check_state='+resule.check_state);
+        };
+        
+    </script>
+    <body>
+        <div id="output_state_window"></div>
+        <iframe src="bad_kernel.html" style="visibility:hidden;"></iframe>
+        <iframe src="oob.html" style="visibility:hidden;"></iframe>
+        <iframe src="reflected_xss.html" style="visibility:hidden;"></iframe>
+        <iframe src="access_port.html" style="visibility:hidden;"></iframe>
+        <iframe src="uxss/exploit.html" style="visibility:hidden;"></iframe>
+    </body>
+</html>

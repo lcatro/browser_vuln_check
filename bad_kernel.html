@@ -1,0 +1,25 @@
+<html>
+<div id="message" style="color: red;"></div>
+<script>
+
+    function post_result(check_state) {
+        var parentwin = window.parent;
+        parentwin.postMessage(check_state,"*");
+    }
+    
+    function check_vuln() {
+        var kMessages;
+        Object.prototype.__defineGetter__("observe_accept_invalid",function(){
+            log("called");
+            kMessages=this});
+        try{Object.observe({},function(){},1)}catch(e){}
+        delete Object.prototype["observe_accept_invalid"];
+
+        if (undefined!=kMessages)
+            return true;
+        return false;
+    }
+    post_result('({vuln_name:"bad_kernel",check_state:'+check_vuln()+'})');
+    
+</script>
+</html>

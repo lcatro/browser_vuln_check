@@ -1,0 +1,48 @@
+
+<html>
+
+    <script>
+    
+        var log_url='http://127.0.0.1/';
+
+        function post_result(check_state) {
+            var parentwin = window.parent;
+            parentwin.postMessage(check_state,"*");
+        }
+
+        function check_vuln() {
+            return post_result('({vuln_name:"access_port",check_state:'+try_access('http://127.0.0.1/')+'})');
+        }
+        
+        function create_http_request() {
+            var xhr;
+            try {xhr = new XMLHttpRequest();}
+            catch(e) {
+                var IEXHRVers =["Msxml3.XMLHTTP","Msxml2.XMLHTTP","Microsoft.XMLHTTP"];
+                for (var i=0,len=IEXHRVers.length;i< len;i++) {
+                    try {xhr = new ActiveXObject(IEXHRVers[i]);}
+                    catch(e) {continue;}
+                }
+            }
+            return xhr;
+        }
+        
+        function try_access(information) {
+            var xhr=create_http_request();
+            try {
+                xhr.open('get',information,false);
+                xhr.send(null);
+            } catch (e) {
+            }
+            console.log(xhr);
+            if (xhr.responseText.length)
+                return true;
+            return false;
+        }
+        
+        check_vuln();
+        
+    </script>
+    
+
+</html>
