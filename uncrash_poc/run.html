@@ -1,0 +1,64 @@
+<html>
+    <script>
+        
+        var log_url=%log_url%;
+        var poc_count=%poc_count%;
+        var poc_valid_index=0;
+        
+        
+        function report_check_state(information) {
+            if (typeof log_url!='undefined') {
+                var xml_http_requester=new XMLHttpRequest();
+                
+                xml_http_requester.open('get',log_url+information,false);
+                xml_http_requester.send(null);
+            }
+            console.log(information);
+        }
+        
+        function print_in_window(information) {
+            var output=document.getElementById('output_state_window');
+            
+            output.innerHTML+=information+'<br/>';
+        }
+        
+        function exit_uncrash_poc_scan() {
+            var scan_state={};
+            
+            scan_state.uncrash_poc_scan=true;
+            scan_state.scan_state=true;
+            report_check_state(JSON.stringify(scan_state));
+        }
+        
+        window.onmessage=function(message) {
+            var result=message.data;
+            
+            report_check_state(JSON.stringify(message.data));
+            print_in_window(result.vuln_name+' check_state='+result.vuln_valid_state);
+            console.log(result.vuln_name+' check_state='+result.vuln_valid_state);
+
+            poc_valid_index++;
+//            console.log(poc_valid_index);
+            
+            if (poc_count==poc_valid_index)
+                exit_uncrash_poc_scan();
+        };
+        
+        function create_new_tab(link_poc_name) {
+            window.open(link_poc_name);
+        }
+        
+        
+        if (!poc_count)
+            exit_uncrash_poc_scan();
+        
+        setTimeout('exit_uncrash_poc_scan()',10000);
+        
+    </script>
+    <body>
+        <div id="output_state_window"></div>
+        
+        <!-- %Replace_This_For_Auto_Fill_PoC_Name -->
+        
+    </body>
+</html>

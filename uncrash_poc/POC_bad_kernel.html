@@ -1,10 +1,18 @@
 <html>
 <div id="message" style="color: red;"></div>
 <script>
+    
+    VULN_NAME='bad_kernel';
+    VULN_VERSION=['Wechat 6.3.0-Wechar 6.3.12'];
 
     function post_result(check_state) {
         var parentwin = window.parent;
-        parentwin.postMessage(check_state,"*");
+        var post_result_json={};
+        post_result_json.vuln_name=VULN_NAME;
+        post_result_json.vuln_version=VULN_VERSION;
+        post_result_json.vuln_valid_state=check_state;
+
+        parentwin.postMessage(post_result_json,'*');
     }
     
     function check_vuln() {
@@ -16,10 +24,12 @@
         delete Object.prototype["observe_accept_invalid"];
 
         if (undefined!=kMessages)
-            return true;
-        return false;
+            post_result(true);
+        else
+            post_result(false);
     }
-    post_result('({vuln_name:"bad_kernel",check_state:'+check_vuln()+'})');
+    
+    check_vuln();
     
 </script>
 </html>

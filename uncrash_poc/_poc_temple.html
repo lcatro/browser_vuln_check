@@ -1,0 +1,84 @@
+
+<html>
+
+    <script>
+    
+        VULN_NAME='poc_temple';     //  PoC CVE ID or Name 
+        VULN_VERSION=[];            //  PoC effect version 
+                                    //  -> VULN_VERSION=None is unknow version ,
+                                    //     VULN_VERSION=[]   is all version
+                                    //     VULN_VERSION=['Chrome 50.0','Chrome 51.0.2344.1','QQ Browser 9316','Wechat 6.3.0-Wechar 6.3.12']  version detail
+        POC_TYPE={                  //  PoC Type :
+            VULN_UNKNOW,            //    Unknow Type PoC
+            VULN_LEAK,              //    Leak information PoC 
+            VULN_UXSS,              //    UXSS
+        }
+        VULN_TYPE=POC_TYPE.VULN_UNKNOW;
+    
+        //  常用PoC 模版
+        
+        function post_result(check_state) {
+            var parentwin = window.parent;
+            var post_result_json={};
+            post_result_json.vuln_name=VULN_NAME;
+            post_result_json.vuln_version=VULN_VERSION;
+            post_result_json.vuln_valid_state=check_state;
+            
+            parentwin.postMessage(post_result_json,'*');
+        }
+        
+        
+        function check_vuln() {
+            /////
+            post_result(true);
+        }
+        
+        check_vuln();
+        
+        
+        //  UXSS PoC 模版
+
+        function post_result(check_state) {
+            var parentwin = window.parent;
+            var post_result_json={};
+            post_result_json.vuln_name=VULN_NAME;
+            post_result_json.vuln_version=VULN_VERSION;
+            post_result_json.vuln_valid_state=check_state;
+
+            parentwin.postMessage(post_result_json,'*');
+        }
+
+        var check_is_valid_state=false;
+    
+        window.onmessage=function(message) {  //  TIPS :UXSS 一般在子窗口中执行代码,所以在这里需要先用一个onmessage 做一下中转,然后再传回主窗口..
+            if ('boolean'==typeof message.data) {
+                check_is_valid_state=message.data;
+                
+                post_result(check_is_valid_state);
+            }
+        }
+
+        function check_is_valid() {
+            if (!check_is_valid_state)
+                post_result(check_is_valid_state);
+        }
+        
+        function check_vuln() {
+            //  UXSS 测试代码
+            
+        }
+        
+        check_vuln();
+            
+        setTimeout('check_is_valid()', 3000);
+        
+        
+    </script>
+
+    
+    <body>
+    
+    
+    </body>
+
+</html>
