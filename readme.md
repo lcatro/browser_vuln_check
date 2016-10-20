@@ -4,6 +4,9 @@
 
 `browser_vuln_check` 利用已知的浏览器漏洞PoC 来快速检测Webview 和浏览器是否存在安全漏洞,帮助产品上线之前检测公开的CVE 漏洞,减少外报漏洞漏水报告<br/>
 
+### 怎么使用
+
+如果你的电脑上没有安装`tornado` 库,第一步先安装目录`/depandent_python_lib` 下的`setuptools-28.6.0` ,然后再安装`tornado-master` <br/>
 
 ### 检测原理
 
