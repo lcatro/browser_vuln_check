@@ -1,12 +1,15 @@
 ## browser_vuln_check
 
----
 
 `browser_vuln_check` 利用已知的浏览器漏洞PoC 来快速检测Webview 和浏览器是否存在安全漏洞,帮助产品上线之前检测公开的CVE 漏洞,减少外报漏洞漏水报告<br/>
+
+---
 
 ### 怎么使用
 
 如果你的电脑上没有安装`tornado` 库,第一步先安装目录`/depandent_python_lib` 下的`setuptools-28.6.0` ,然后再安装`tornado-master` <br/>
+
+---
 
 ### 检测原理
 
@@ -51,6 +54,9 @@ Example:<br/><br/>
 
 崩溃型PoC 采用Pydbg 调试进程,把url 传递给浏览器访问崩溃PoC ,直到浏览器崩溃时定位到崩溃点并获取上下文信息,由于现在浏览器大部分采用多进程运行,于是调试器并不方便针对浏览器的子进程来调试,所以在当前版本的`browser_vuln_check` 会把每一个会崩溃的PoC URL 作为参数来启动浏览器,然后等待执行结果,关闭浏览器,再执行下一个PoC <br/>
 
+*WARNING!* `browser_vuln_check` 对于以*大写字母POC 或者CVE* 开头的文件,`server.py` 会认为这是一个有效的PoC 文件,作为\<iframe\> 添加到`run.html` 和`crash_poc_valid_logic.py` 中..<br/>
+
+---
 
 ### PoC 构造
 
