@@ -88,7 +88,7 @@ def send_result(port,data) :
 def listen(port_args) :
 #    try :
         handler = [
-            (r'/uncrash_scan',uncrash_handle),
+            (r'/uncrash_scan',uncrash_handle),     #  http://127.0.0.1/uncrash_scan
             (r'/uncrash_poc', read_poc_handle),
             (r'/crash_poc',   read_poc_handle),
             (r'/report',      report_handle),

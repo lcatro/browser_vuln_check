@@ -6,6 +6,7 @@ import base_function
 import server
 
 create_process_pid_list=[]
+current_cve_name=''
 
 def add_new_process_pid(process_id) :
     global create_process_pid_list
@@ -37,9 +38,12 @@ def create_process_debug_event_handle(self) :
     return pydbg.defines.DBG_CONTINUE
 
 def access_exception_debug_event_handle(self) :
+    global current_cve_name
+    
     current_pid=self.dbg.dwProcessId
     current_address=self.exception_address
     
+    print current_cve_name
     print 'WARNING! PID:'+str(current_pid)+' Making a Access Exception (0xC0000005) '
     print 'Detail Report :\r\n'
     print '  Exception Address:'+str(current_address)
@@ -52,10 +56,13 @@ def access_exception_debug_event_handle(self) :
     return pydbg.defines.DBG_CONTINUE
 
 def breakpoint_exception_debug_event_handle(self) :
+    global current_cve_name
+    
     current_pid=self.dbg.dwProcessId
     current_address=self.exception_address
     
     if not str(hex(current_address))[-3:]=='cf4' :
+        print current_cve_name
         print 'WARNING! PID:'+str(current_pid)+' Making a BreakPoint Exception [INT 3 or Hard Breakpoint ](0x80000003) '
 
         get_instruction(self,current_address,current_pid)
@@ -85,12 +92,16 @@ def monitor_browser_crash(browser_path,command_line) :
     debugger.detach()
 
 def valid_crash_poc(browser_path) :
+    global current_cve_name
+    
     crash_file_list=base_function.list_dir_file(base_function.get_current_path()+'crash_poc')
     
     for crash_file_index in crash_file_list :
         if (crash_file_index[1]=='index.html' or
             -1!=crash_file_index[1].find('CVE') or
             -1!=crash_file_index[1].find('POC')) :
+            current_cve_name=crash_file_index[1][:-5]
+            
             if '.pdf'==crash_file_index[1][-4:] :
                 command_line='"'+crash_file_index[0]+'"'
                 monitor_browser_crash(browser_path,crash_file_index[0])

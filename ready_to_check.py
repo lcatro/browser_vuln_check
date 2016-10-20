@@ -20,5 +20,5 @@ BROWSER_PATH='C:\\Program Files (x86)\\Tencent\\QQBrowser\\QQBrowser.exe'
 '''
 
 if __name__=='__main__' :
-    uncrash_poc_valid_logic.valid_uncrash_poc(BROWSER_PATH)
+#    uncrash_poc_valid_logic.valid_uncrash_poc(BROWSER_PATH)
     crash_poc_valid_logic.valid_crash_poc(BROWSER_PATH)
